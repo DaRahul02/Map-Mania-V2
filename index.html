@@ -1,12 +1,461 @@
 <!DOCTYPE html>
-<html>
-<head>
-<title>Hello World Azure Template</title>
-</head>
-<body>
-<h1>Azure Static Website Template</h1>
-<p>This page is a sample page for a “Hello World” Azure Static Website Template. The page contains an HTML validation warning. 
-Can you find and fix that warning? What about the curly quotes? Do they current work in all browsers? Can you fix the curly 
-quotes also? And what about proper indenting?</p>
-</body>
-</html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Google Map</title>
+    <link rel="stylesheet" href="./index.css">
+    <link rel="icon" href="./favicon.ico" type="image/x-icon">
+    <style>
+      #map{
+        height:1000px;
+        width:100%;
+      }
+
+      #scoreDisplay{
+        font-size: 24px;
+      }
+
+      #hintDisplay{
+        font-size: 24px;
+
+      }
+
+
+
+    </style>
+
+    
+  </head>
+  <body>
+    <h1>Rahul's Top 10 Favorite Places In The World Game</h1> 
+    <div id="scoreDisplay">Points: 0</div>
+    <div id="hintDisplay"></div>
+    <div id="map"></div>
+    <button id="cheatButton">Cheat Code: Reveal All Locations</button>
+    <div id="cheatMessage"></div>
+
+
+    <script>
+      // users points
+      var userPoints = 0; // Define the user points
+      var scoreDisplay = document.getElementById('scoreDisplay'); // Get the score display element
+
+
+      function initMap(){
+        //map options
+        var options = {
+          zoom:3,
+          center:{lat:40.6331,lng:89.3985}
+        }
+        
+        //new map
+        var map = new 
+        google.maps.Map(document.getElementById('map'), options);
+
+        // Listen for click on map
+
+        
+          
+       
+
+
+
+        /*
+        //add marker
+        var marker = new google.maps.Marker({
+          position:{lat:22.6708,lng:71.5724},
+          map:map,
+          
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+          content:'<h1>Gujarat</h1>'
+        });
+
+        marker.addListener('click', function(){
+          infoWindow.open(map, marker);
+        });
+
+        */
+        
+        // array of markers
+        var markers = [
+          {
+            coords:{lat:19.8987,lng:-155.6659},
+            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content:'<h1>Hawaii</h1>'
+          },
+          {
+            coords:{lat:40.7128,lng:-74.0060},
+            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content:'<h1>New York</h1>'
+            
+          },
+          {
+            coords:{lat:41.8781,lng:-87.6298},
+            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content:'<h1>Chicago</h1>'
+          },
+          {
+            coords:{lat:21.1619,lng:-86.8515},
+            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content:'<h1>Cancun</h1>'
+          },
+          {
+            coords:{lat:36.2048,lng:138.2529},
+            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content:'<h1>Japan</h1>'
+          },
+          {
+            coords:{lat:25.2048,lng:55.2708},
+            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content:'<h1>Dubai</h1>'
+          },
+          {
+            coords:{lat:48.3794,lng:31.1656},
+            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content:'<h1>Ukraine</h1>'
+          },
+          {
+            coords:{lat:64.9631,lng:-19.0208},
+            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content:'<h1>Iceland</h1>'
+          },
+          {
+            coords:{lat:26.8206,lng:30.8025},
+            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content:'<h1>Egypt</h1>'
+          },
+          {
+            coords:{lat:35.8617,lng:104.1954},
+            iconImage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            content:'<h1>China</h1>'
+          },
+        ];
+
+        // START CODE HERE FOR NEW REQUIREMENTS 5 & 6 REVEAL BUTTON AND HINTS
+
+        var revealButton = document.getElementById('revealButton');
+        var infoWindow = new google.maps.InfoWindow();
+        
+        // Add new json for favoritelocations to find
+        var favoriteLocations = [
+          {
+            coords:{lat:19.8987,lng:-155.6659},
+            hint: '1: An Island Paradise in the Middle of the Pacific Ocean Known for its Stunning Beaches, Volcanoes, and Hula Dances.',
+            revealed: false
+          },
+          {
+            coords:{lat:40.7128,lng:-74.0060},
+            hint: '2: Location Known for the Statue of Liberty and Times Square.',
+            revealed: false
+          },
+          {
+            coords:{lat:41.8781,lng:-87.6298},
+            hint: '3: City with Amazing Deep-Dish Pizza and the Bean',
+            revealed: false
+          },
+          {
+            coords:{lat:21.1619,lng:-86.8515},
+            hint: '4: A Tropical Paradise Known for its Beautiful Blue Waters, and Beautiful Sandy Beaches,',
+            revealed: false
+          },
+          {
+            coords:{lat:36.2048,lng:138.2529},
+            hint: '5: Country well Known for its Sushi, Sumo, Anime, and Karate',
+            revealed: false
+          },
+          {
+            coords:{lat:25.2048,lng:55.2708},
+            hint: '6: SkyScrapers, Man-Made Islands, Luxurious Shopping, and Known as the "Magnificent Desert City."',
+            revealed: false
+          },
+          {
+            coords:{lat:48.3794,lng:31.1656},
+            hint: '7: Very Diverse Landscapes, the Capital is Kyiv, often looked at for the "Chernobyl Nuclear Disaster," and Carries Alot of History with Russia. ',
+            revealed: false
+          },
+          {
+            coords:{lat:64.9631,lng:-19.0208},
+            hint: '8: Country in the North Atlantic, very Famous for its landscapes, geysers and the Blue Lagoon. Nice and "ice" olated!',
+            revealed: false
+          },
+          {
+            coords:{lat:26.8206,lng:30.8025},
+            hint: '9: Home to Pyramids and The Sphinx.',
+            revealed: false
+          },
+          {
+            coords:{lat:35.8617,lng:104.1954},
+            hint: '10: Alot of Pandas, kung fu and has "The Great Wall."',
+            revealed: false
+          },
+        ];
+
+
+        // index for stuff
+        var currentLocationIndex = 0;
+        var hintDisplay = document.getElementById('hintDisplay');
+        var scoreDisplay = document.getElementById('scoreDisplay');
+        var userPoints = 0;
+
+
+        var previousMarker = null; // Add this variable to keep track of the previous marker
+
+      
+
+          // Function to reveal the current location
+        function revealCurrentLocation() {
+          if (currentLocationIndex >= favoriteLocations.length) {
+            hintDisplay.textContent = 'Game Over';
+
+            // Display the last location (China)
+            var lastLocation = favoriteLocations[favoriteLocations.length - 1];
+            var lastLocationMarker = new google.maps.Marker({
+              position: lastLocation.coords,
+              map: map,
+              icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+            });
+
+            // You may also want to display a message for the end of the game.
+            hintDisplay.textContent = 'Game Over. You have visited all locations!';
+          } else {
+            var currentLocation = favoriteLocations[currentLocationIndex];
+            hintDisplay.textContent = 'Given Hint For Location # ' + currentLocation.hint;
+
+             // Display the current hint
+            hintDisplay.textContent = 'Hint: ' + currentLocation.hint;
+
+
+
+            // Add a marker to show the previous location
+            if (currentLocationIndex > 0) {
+              var prevLocation = favoriteLocations[currentLocationIndex - 1];
+              previousMarker = new google.maps.Marker({
+                position: prevLocation.coords,
+                map: map,
+                icon: {
+                  url: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+                },
+              });
+            }
+          }
+        }
+
+        function displayLastLocation() {
+          var lastLocation = favoriteLocations[favoriteLocations.length - 1];
+          var lastLocationMarker = new google.maps.Marker({
+            position: lastLocation.coords,
+            map: map,
+            icon: 'https://maps.google.com/mapfiles/ms/icons/green-dot.png',
+          });
+
+          hintDisplay.textContent = 'Game Over! Max Score Possible was 10, what did you score?';
+        }
+
+
+
+
+
+
+        // range calculator
+        function isWithinRange(lat1, lng1, lat2, lng2, range) {
+        var R = 6371; // Radius of the Earth in kilometers
+        var lat1Rad = (lat1 * Math.PI) / 180;
+        var lng1Rad = (lng1 * Math.PI) / 180;
+        var lat2Rad = (lat2 * Math.PI) / 180;
+        var lng2Rad = (lng2 * Math.PI) / 180;
+        var dLat = lat2Rad - lat1Rad;
+        var dLng = lng2Rad - lng1Rad;
+        var a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos(lat1Rad) *
+            Math.cos(lat2Rad) *
+            Math.sin(dLng / 2) *
+            Math.sin(dLng / 2);
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        var distance = R * c * 1000; // Distance in meters
+        return distance <= range;
+        }
+
+
+        
+
+
+
+
+
+
+
+
+
+        var maxRange = 4000000;
+        var maxScore = 100;
+
+        // Start the game by revealing the first location
+        revealCurrentLocation();
+
+        google.maps.event.addListener(map, 'click', function (event) {
+        
+            var currentLocation = favoriteLocations[currentLocationIndex];
+            var latLng = event.latLng;
+            var targetCoords = currentLocation.coords;
+            var range = 1000000; // Adjust this range as needed
+            var maxScore = 10; // Maximum score
+
+            // Calculate the distance using the Google Maps Geometry library
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(
+              latLng,
+              new google.maps.LatLng(targetCoords.lat, targetCoords.lng)
+            );
+
+            // Adjust the score based on the distance (the closer, the more points)
+            var score = calculateScore(distance, maxRange, maxScore);
+
+            // Add the calculated score to the user's points
+            userPoints += score;
+
+            // Limit the user points to a maximum of 10
+            if (userPoints > 100) {
+              userPoints = 100;
+            }
+
+            scoreDisplay.textContent = 'Points: ' + userPoints;
+
+            currentLocationIndex++; // Move to the next location
+
+            if (currentLocationIndex < favoriteLocations.length) {
+              revealCurrentLocation(); // Show the next hint
+            } else {
+              hintDisplay.textContent = 'Game Over'; // All locations found
+            }
+          
+        });
+
+
+
+        // Calculate the score based on distance and range
+        function calculateScore(distance, maxRange, maxScore) {
+          if (distance <= maxRange) {
+              // Calculate the score linearly
+              var rawScore = maxScore * (1 - distance / maxRange);
+
+              // Round the score to the nearest whole number
+              return Math.round(rawScore);
+          } else {
+              return 0; // User is too far, no points
+          }
+        }
+              
+      
+
+
+
+
+
+        var originalHint = hintDisplay.textContent; // Store the original hint
+
+
+
+
+        //cheat code button here
+
+        var cheatMessageDisplay = document.getElementById('cheatMessage');
+
+        cheatButton.addEventListener('click', function () {
+          // Loop through all locations and reveal them
+          favoriteLocations.forEach(function (location, index) {
+            if (!location.revealed) {
+              location.revealed = true;
+              var marker = new google.maps.Marker({
+                position: location.coords,
+                map: map,
+                icon: 'https://maps.google.com/mapfiles/ms/icons/yellow-dot.png', // You can use a different icon to distinguish cheated markers
+              });
+            }
+          });
+
+          // Display the cheat-related message
+          cheatMessageDisplay.textContent = 'Cheat Code Activated. All locations revealed!';
+
+          // Disable the cheat button after use
+          cheatButton.disabled = true;
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // hiding this for now
+        // loop through markers
+        // for(var i = 0;i < markers.length;i++){
+        //  addMarker(markers[i]);
+        //}
+
+
+
+
+
+        
+
+
+        // add marker function
+        function addMarker(props){
+          var marker = new google.maps.Marker({
+            position:props.coords,
+            map:map,
+            //icon:props.iconImage
+          });
+
+          //check for custom icon
+          if(props.iconImage){
+            //set icon image
+            marker.setIcon(props.iconImage);
+          }
+
+          //check content
+          if(props.content){
+            var infoWindow = new google.maps.InfoWindow({
+              content:props.content
+            });
+
+            marker.addListener('click', function(){
+              infoWindow.open(map, marker);
+            });
+          }
+        }
+      }
+    </script>
+    <script async defer 
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCeZsNMWO1AGz2g8-w8sjW_8LcEqfl6yhg&libraries=geometry&callback=initMap">
+    </script>
+
+
+
+
+
+
+
+  
+
+
+
+	<script src="index.js"></script>
+
+
+
+
+
+
+  </body>
+</html
